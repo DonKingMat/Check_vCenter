@@ -7,7 +7,7 @@ SLACKCHANNEL="hetzner"
 SLACKUSER="Rechenzentrum"
 LAMETRIC="eschersburg"
 EMOJI=":zap:"
-HOOK=YOUR/SLACK/HOOK
+SLACK_HOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/HOOK
 
 START=$(date +%s)
 CURL=`which curl`
@@ -38,7 +38,7 @@ while true ; do
 	if [ $POWER -gt 1 ] ; then
 		MELDUNG="Es sind $POWER Server an ($(( $(date +%s) - START ))s)"
 		echo $MELDUNG
-		$CURL --silent -X POST --data-urlencode "payload={\"channel\": \"${LAMETRIC}\", \"username\": \"Rechenzentrum\", \"text\": \"${MELDUNG}\", \"icon_emoji\": \"${EMOJI}\"}" https://hooks.slack.com/services/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
+		$CURL --silent -X POST --data-urlencode "payload={\"channel\": \"${LAMETRIC}\", \"username\": \"Rechenzentrum\", \"text\": \"${MELDUNG}\", \"icon_emoji\": \"${EMOJI}\"}" ${SLACK_HOOK_URL}
 
 VMS=$(echo $VALUE | $JQ -r '.value | .[].vm')
 for VM in $VMS ; do
@@ -54,7 +54,7 @@ for VM in $VMS ; do
 	fi
 	
 	MELDUNG="VM-Code $VM is host $VMHOSTNAME has VM name $VMNAME and $MESSAGE"
-	$CURL --silent -X POST --data-urlencode "payload={\"channel\": \"${SLACKCHANNEL}\", \"username\": \"Rechenzentrum\", \"text\": \"${MELDUNG}\", \"icon_emoji\": \"${EMOJI}\"}" https://hooks.slack.com/services/${HOOK}
+	$CURL --silent -X POST --data-urlencode "payload={\"channel\": \"${SLACKCHANNEL}\", \"username\": \"Rechenzentrum\", \"text\": \"${MELDUNG}\", \"icon_emoji\": \"${EMOJI}\"}" ${SLACK_HOOK_URL}
 done
 
 		exit
